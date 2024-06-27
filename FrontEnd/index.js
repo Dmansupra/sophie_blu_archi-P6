@@ -157,9 +157,6 @@ function removeToken() {
   sessionStorage.removeItem("deletedImages");
 }
 
-//événement fermeture onglet ou redirection vers un autre site
-window.addEventListener("unload", removeToken);
-
 // *****************************************************************************************************
 // *****************************DOM QUI PASSE EN MODE ADMIN EDITOR  ************************************
 // *****************************************************************************************************
@@ -168,7 +165,7 @@ function adminEdition() {
   // *****************************************************************************************************
   //*************************************OPEN 1ER MODAL EDIT SUPRESSION
   // *****************************************************************************************************
-  const modalJs = document.getElementById("titleProjectRemove");
+  const modalJs = document.getElementById("titleemove");
 
   modalJs.addEventListener("click", (e) => {
     e.preventDefault();
@@ -200,7 +197,7 @@ const adminHTML = () => {
 
   const spanFlagEditor = document.createElement("span");
   spanFlagEditor.classList.add("projectRemove");
-  spanFlagEditor.textContent = "Mode édition";
+  spanFlagEditor.textContent = "Modifier";
 
   //*************************************Créer Le SPAN avec le "i"
   const iconFlagEditor = document.createElement("i");
@@ -291,6 +288,9 @@ function openModal() {
     iconDelete.id = "deleteIcon";
     iconDelete.classList.add("fa-solid", "fa-trash-can", "iconModal");
     iconDelete.setAttribute("aria-hidden", "true");
+    iconDelete.addEventListener("click", () =>
+      functionDeleteWorksApi(cards[index].id)
+    );
     img.src = link;
     p.textContent = "éditer";
     container.appendChild(img);
@@ -362,35 +362,27 @@ function openModal() {
   const galleryMap = document.getElementById("modalGrid");
   galleryMap.append(...imageElements);
 }
-const functionDeleteWorksApi = () => {
-  // Récupérer la chaîne de sessionStorage
-  const deletedImagesJSON = sessionStorage.getItem("deletedImages");
-  // Convertir la chaîne en objet JavaScript
-  const deletedImages = JSON.parse(deletedImagesJSON);
-  // Supprimer chaque image du SESSION STORAGE
-  //méthode JavaScript qui renvoie un tableau contenant les clés d'un objet
-  Object.keys(deletedImages).forEach(async (id) => {
-    try {
-      if (token === false) return console.log({ error: "Pas connecté" });
+const functionDeleteWorksApi = async (id) => {
+  try {
+    if (token === false) return console.log({ error: "Pas connecté" });
 
-      const response = await fetch(`${api}works/${id}`, {
-        method: "DELETE",
-        headers: {
-          Accept: "*/*",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        console.log(`Image avec ID ${id} supprimée`);
-      } else {
-        throw new Error(response.statusText);
-      }
-    } catch (e) {
-      console.error(
-        `Erreur lors de la suppression de l'image avec ID ${id}: ${e}`
-      );
+    const response = await fetch(`${api}works/${id}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "*/*",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      console.log(`Image avec ID ${id} supprimée`);
+    } else {
+      throw new Error(response.statusText);
     }
-  });
+  } catch (e) {
+    console.error(
+      `Erreur lors de la suppression de l'image avec ID ${id}: ${e}`
+    );
+  }
 };
 // *****************************************************************************************************
 //**********************************  AFFICHAGE DE LA MODAL  *******************************************
@@ -523,9 +515,22 @@ function editModal() {
           console.log("Ta requête POST est passé :) :", data);
           fetchApiWorks();
           workDisplay();
-          closeModal();
-          // réinitialiser le champ inputFile sinon il envoie plusieur formData en post
-          inputFile.value = "";
+          document.querySelector("#title").value = "";
+          document.querySelector("#category").value = "";
+          document.querySelector("#addImageContainer").innerHTML = "";
+          document.querySelector(
+            "#addImageContainer"
+          ).innerHTML = `<i class="fa-solid fa-image"></i>
+
+            <div id="inputFile">
+              <label for="filetoUpload" class="fileLabel">
+                <span>+ Ajouter une photo</span>
+                <input type="file" id="filetoUpload" name="image" accept="image/png, image/jpeg"
+                  class="file-input">
+              </label>
+            </div>
+            <span class="filesize">jpg, png : 4mo max</span>
+            <span id="errorImg"></span>`;
         })
         .catch((error) => {
           console.error("Error:", error);
