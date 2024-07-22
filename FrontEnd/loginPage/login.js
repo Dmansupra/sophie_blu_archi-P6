@@ -7,11 +7,14 @@ const submitBtn = document.querySelector("input[type='submit']");
 const form = document.getElementById("loginForm");
 const loginError = document.querySelector(".loginError");
 const passwordError = document.querySelector(".passwordError");
-
+const token = localStorage.getItem("token");
 const logUser = {
   email: "",
   password: "",
 };
+if (token) {
+  window.location.href = "../index.html";
+}
 
 // *****************************************************************************************************
 //LOGIQUE contrôle du Log IN

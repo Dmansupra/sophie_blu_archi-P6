@@ -139,7 +139,6 @@ window.addEventListener("load", (e) => {
 //*************************************Coté ADMINISTRATOR!!!
 function checkToken() {
   // Vérifie si le token est dans le localStorage
-  const token = localStorage.getItem("token");
   if (token) {
     //document.body.style.background = "red";
     console.log("Token en mémoire! => Mode ADMIN activé ;)");
