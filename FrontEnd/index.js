@@ -509,7 +509,7 @@ function editModal() {
           if (!response.ok) {
             throw new Error("Ta requête POST n'est pas passé :/ ");
           }
-          alert("Votre image a bien été ajouté");
+          alert("Votre image a bien été ajoutée");
           return response.json();
         })
         .then((data) => {
