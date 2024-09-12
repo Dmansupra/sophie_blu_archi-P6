@@ -446,6 +446,7 @@ form textarea {
   background-color: black;
   height: 59px;
   width: 100%;
+  z-index: 9998;
 }
 
 .marginTop {
@@ -530,6 +531,7 @@ form textarea {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.2);
+  z-index: 9999;
 }
 
 .modalOpen {

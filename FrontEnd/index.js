@@ -440,6 +440,12 @@ function editModal() {
     const submitForm = document.querySelector(
       "#editWorks > div.footerModal.editFooter > input[type=submit]"
     );
+    const enableSubmitButton = () => {
+      const submitForm = document.querySelector("#submitForm");
+      submitForm.disabled = false; // Enlever l'attribut disabled
+      submitForm.style.backgroundColor = "rgb(167, 167, 167)"; // Changer la couleur de fond
+      submitForm.style.cursor = "pointer"; // Changer le curseur en pointer
+    };
     iCanSubmit = false;
     titleSelected = false;
     categorySelected = false;
@@ -471,6 +477,7 @@ function editModal() {
     }
     if (titleSelected && categorySelected && imageSelected) {
       submitForm.style.background = " #1d6154";
+      enableSubmitButton();
       iCanSubmit = true;
     }
   });
@@ -544,7 +551,6 @@ function editModal() {
 }
 
 //*************************************AUTRE FONCTION DE LA MODAL
-
 function disableScroll() {
   document.body.classList.add("modalOpen");
 }
@@ -632,7 +638,7 @@ const modalHTML = () => {
 
           <div class="footerModal editFooter">
             <hr>
-            <input type="submit" value="Valider">
+            <input type="submit" value="Valider" id="submitForm" disabled style="background-color: grey; cursor: not-allowed;">
           </div>
         </form>
       </section>
@@ -664,6 +670,19 @@ const addPicture = () => {
     viewImage.appendChild(img);
     viewImage.style.padding = "0";
   });
-
   reader.readAsDataURL(file);
 };
+
+function updateGallery() {
+  const apiWorksEndpoint = api + "works";
+  fetch(apiWorksEndpoint)
+    .then((response) => response.json())
+    .then((data) => {
+      // Mettez à jour la galerie en utilisant les données récupérées
+      workDisplay(data);
+    });
+}
+inputFile.addEventListener("change", function () {
+  // Appeler la fonction de mise à jour de la galerie
+  updateGallery();
+});
